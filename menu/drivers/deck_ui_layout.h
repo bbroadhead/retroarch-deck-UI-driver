@@ -55,4 +55,22 @@ static inline deck_ui_rect_t deck_ui_layout_achievement_tabs(
       base.header.width, 56.0f * base.scale};
    return tabs;
 }
+
+/* Geometry for one achievement tab; selected tab can be drawn with
+ * a separate accent rectangle without changing focus state.
+ */
+static inline deck_ui_rect_t deck_ui_layout_achievement_tab(
+      unsigned width, unsigned height, unsigned tab_index)
+{
+   deck_ui_rect_t bar = deck_ui_layout_achievement_tabs(width, height);
+   float gap, tab_width;
+   if (tab_index >= 3 || bar.width <= 0.0f)
+      return (deck_ui_rect_t){0};
+   gap = 8.0f * (bar.width / 1208.0f);
+   tab_width = (bar.width - gap * 2.0f) / 3.0f;
+   return (deck_ui_rect_t){
+      bar.x + (float)tab_index * (tab_width + gap),
+      bar.y, tab_width, bar.height
+   };
+}
 #endif
