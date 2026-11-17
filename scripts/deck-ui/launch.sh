@@ -45,18 +45,16 @@ export XDG_DATA_HOME="$ROOT/data-home"
 export XDG_CACHE_HOME="$ROOT/cache-home"
 mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME"
 
-# The deck driver is not yet compiled into RetroArch.
-# Keep Ozone as the safe default until the native driver passes a smoke test.
-if [[ "$MODE" == "deck" ]]; then
-  echo "Deck UI driver is not yet integrated; launching isolated Ozone build." >&2
-  exec "$BINARY" --config "$CONFIG" --menu
-fi
-
-# Safe mode forces Ozone regardless of the saved menu driver preference.
-SAFE_CONFIG="$ROOT/config/retroarch-safe.cfg"
+# Build an ephemeral driver-specific configuration; never modify the
+# regular experimental configuration just to switch drivers.
+RUN_CONFIG="$ROOT/config/retroarch-$MODE.cfg"
 awk '
   /^[[:space:]]*menu_driver[[:space:]]*=/ { next }
   { print }
-' "$CONFIG" > "$SAFE_CONFIG"
-printf '\nmenu_driver = "ozone"\n' >> "$SAFE_CONFIG"
-exec "$BINARY" --config "$SAFE_CONFIG" --menu
+' "$CONFIG" > "$RUN_CONFIG"
+if [[ "$MODE" == "safe" ]]; then
+  printf '\nmenu_driver = "ozone"\n' >> "$RUN_CONFIG"
+else
+  printf '\nmenu_driver = "deck"\n' >> "$RUN_CONFIG"
+fi
+exec "$BINARY" --config "$RUN_CONFIG" --menu
