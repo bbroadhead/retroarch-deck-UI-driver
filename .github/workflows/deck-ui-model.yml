@@ -5,15 +5,19 @@ on:
     paths:
       - 'menu/drivers/deck_ui_model.h'
       - 'menu/drivers/deck_ui_recent.h'
+      - 'menu/drivers/deck_ui_achievements.h'
       - 'tests-other/deck_ui_model_test.c'
       - 'tests-other/deck_ui_recent_test.c'
+      - 'tests-other/deck_ui_achievements_test.c'
       - '.github/workflows/deck-ui-model.yml'
   pull_request:
     paths:
       - 'menu/drivers/deck_ui_model.h'
       - 'menu/drivers/deck_ui_recent.h'
+      - 'menu/drivers/deck_ui_achievements.h'
       - 'tests-other/deck_ui_model_test.c'
       - 'tests-other/deck_ui_recent_test.c'
+      - 'tests-other/deck_ui_achievements_test.c'
       - '.github/workflows/deck-ui-model.yml'
   workflow_dispatch:
 
@@ -30,3 +34,7 @@ jobs:
         run: cc -std=c99 -Wall -Wextra -Werror -pedantic -o /tmp/deck_ui_recent_test tests-other/deck_ui_recent_test.c
       - name: Run recent-content tests
         run: /tmp/deck_ui_recent_test
+      - name: Compile achievement view model
+        run: cc -std=c99 -Wall -Wextra -Werror -pedantic -o /tmp/deck_ui_achievements_test tests-other/deck_ui_achievements_test.c
+      - name: Run achievement view tests
+        run: /tmp/deck_ui_achievements_test
