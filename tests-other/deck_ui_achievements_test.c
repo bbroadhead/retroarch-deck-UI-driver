@@ -14,6 +14,10 @@ int main(void)
    assert(deck_ui_achievements_add(&view, 3, "Hardcore", false, true));
    assert(!deck_ui_achievements_add(&view, 3, "Duplicate", true, true));
    assert(view.count == 3);
+   assert(deck_ui_achievements_tab_count(&view, DECK_UI_ACHIEVEMENT_ALL) == 3);
+   assert(deck_ui_achievements_tab_count(&view, DECK_UI_ACHIEVEMENT_UNLOCKED) == 2);
+   assert(deck_ui_achievements_tab_count(&view, DECK_UI_ACHIEVEMENT_LOCKED) == 1);
+   assert(deck_ui_achievements_scroll_offset(&view, 2) == 0);
    assert(deck_ui_achievements_visible_count(&view) == 3);
    deck_ui_achievements_set_filter(&view, DECK_UI_ACHIEVEMENT_LOCKED);
    assert(deck_ui_achievements_visible_count(&view) == 1);
@@ -25,6 +29,7 @@ int main(void)
    assert(deck_ui_achievements_visible_count(&view) == 2);
    deck_ui_achievements_move(&view, 1);
    assert(view.selected == 1);
+   assert(deck_ui_achievements_scroll_offset(&view, 1) == 1);
    item = deck_ui_achievements_at(&view, view.selected);
    assert(item && item->id == 3 && item->hardcore_unlocked);
    deck_ui_achievements_set_filter(&view, DECK_UI_ACHIEVEMENT_ALL);
