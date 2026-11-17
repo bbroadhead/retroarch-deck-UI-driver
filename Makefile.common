@@ -1032,6 +1032,14 @@ ifeq ($(HAVE_MENU), 1)
       HAVE_MENU_SCREENSAVER = 1
    endif
 
+   ifeq ($(HAVE_DECK_UI), 1)
+      ifneq ($(HAVE_OZONE), 1)
+         $(error HAVE_DECK_UI requires HAVE_OZONE=1)
+      endif
+      OBJ += menu/drivers/deck.o
+      DEFINES += -DHAVE_DECK_UI
+   endif
+
    ifeq ($(HAVE_OZONE), 1)
       OBJ += menu/drivers/ozone.o
       DEFINES += -DHAVE_OZONE
