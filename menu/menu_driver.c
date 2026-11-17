@@ -362,14 +362,14 @@ static menu_ctx_driver_t menu_ctx_null = {
 
 /* Menu drivers */
 const menu_ctx_driver_t *menu_ctx_drivers[] = {
-#if defined(HAVE_DECK_UI)
-   &menu_ctx_deck,
-#endif
 #if defined(HAVE_MATERIALUI)
    &menu_ctx_mui,
 #endif
 #if defined(HAVE_OZONE)
    &menu_ctx_ozone,
+#endif
+#if defined(HAVE_DECK_UI)
+   &menu_ctx_deck,
 #endif
 #if defined(HAVE_RGUI)
    &menu_ctx_rgui,
@@ -5451,10 +5451,11 @@ const menu_ctx_driver_t *menu_driver_find_driver(
       const char *prefix,
       bool verbosity_enabled)
 {
+   int i;
 #ifdef HAVE_DECK_UI
    deck_menu_driver_bootstrap();
 #endif
-   int i = (int)driver_find_index("menu_driver",
+   i = (int)driver_find_index("menu_driver",
          settings->arrays.menu_driver);
 
    if (i >= 0)
