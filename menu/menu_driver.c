@@ -362,6 +362,9 @@ static menu_ctx_driver_t menu_ctx_null = {
 
 /* Menu drivers */
 const menu_ctx_driver_t *menu_ctx_drivers[] = {
+#if defined(HAVE_DECK_UI)
+   &menu_ctx_deck,
+#endif
 #if defined(HAVE_MATERIALUI)
    &menu_ctx_mui,
 #endif
@@ -4407,6 +4410,10 @@ static enum menu_driver_id_type menu_driver_set_id(
 {
    if (driver_name && *driver_name)
    {
+#ifdef HAVE_DECK_UI
+      if (!strcmp(driver_name, "deck"))
+         return MENU_DRIVER_ID_OZONE; /* Ozone renderer until Deck UI is ready */
+#endif
 #ifdef HAVE_RGUI
       if (!strcmp(driver_name, "rgui"))
          return MENU_DRIVER_ID_RGUI;
@@ -5444,6 +5451,9 @@ const menu_ctx_driver_t *menu_driver_find_driver(
       const char *prefix,
       bool verbosity_enabled)
 {
+#ifdef HAVE_DECK_UI
+   deck_menu_driver_bootstrap();
+#endif
    int i = (int)driver_find_index("menu_driver",
          settings->arrays.menu_driver);
 
