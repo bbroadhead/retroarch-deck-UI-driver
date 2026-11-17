@@ -29,6 +29,15 @@ int main(void)
    assert(item && item->id == 3 && item->hardcore_unlocked);
    deck_ui_achievements_set_filter(&view, DECK_UI_ACHIEVEMENT_ALL);
    assert(view.selected == 0);
+   deck_ui_achievements_switch_tab(&view, 1);
+   assert(view.filter == DECK_UI_ACHIEVEMENT_UNLOCKED);
+   assert(view.selected == 1); /* restored per-tab selection */
+   deck_ui_achievements_switch_tab(&view, 1);
+   assert(view.filter == DECK_UI_ACHIEVEMENT_LOCKED);
+   deck_ui_achievements_switch_tab(&view, 1);
+   assert(view.filter == DECK_UI_ACHIEVEMENT_ALL);
+   deck_ui_achievements_switch_tab(&view, -1);
+   assert(view.filter == DECK_UI_ACHIEVEMENT_LOCKED);
    assert(deck_ui_achievements_at(&view, 3) == NULL);
    return 0;
 }
