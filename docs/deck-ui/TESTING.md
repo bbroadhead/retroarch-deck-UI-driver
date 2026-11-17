@@ -22,4 +22,4 @@
 
 ## Recovery
 
-Use `bash scripts/deck-ui/launch.sh safe` to launch the separate build with the current safe default of Ozone. When the custom driver is implemented, safe mode must explicitly override its selection before being described as a reliable fallback.
+Use `bash scripts/deck-ui/launch.sh safe` to launch the separate build with the current safe default of Ozone. Safe mode generates a separate config that explicitly forces `menu_driver = "ozone"` without changing the regular experimental config.
