@@ -12,7 +12,7 @@
 
 - Custom rendered Home screen and recently played carousel.
 - Custom per-console library and game detail pages.
-- Custom RetroAchievements progress and badge interface.
+- Custom **rendered** RetroAchievements progress and badge interface. A standalone achievements filtering/focus model and tests exist, but the model is not yet connected to cheevos.
 - Full native renderer, artwork layout and controller focus integration.
 - Verified end-to-end compilation, runtime and Steam Deck testing.
 
