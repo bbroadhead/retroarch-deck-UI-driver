@@ -49,5 +49,14 @@ mkdir -p "$HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME"
 # Keep Ozone as the safe default until the native driver passes a smoke test.
 if [[ "$MODE" == "deck" ]]; then
   echo "Deck UI driver is not yet integrated; launching isolated Ozone build." >&2
+  exec "$BINARY" --config "$CONFIG" --menu
 fi
-exec "$BINARY" --config "$CONFIG" --menu
+
+# Safe mode forces Ozone regardless of the saved menu driver preference.
+SAFE_CONFIG="$ROOT/config/retroarch-safe.cfg"
+awk '
+  /^[[:space:]]*menu_driver[[:space:]]*=/ { next }
+  { print }
+' "$CONFIG" > "$SAFE_CONFIG"
+printf '\nmenu_driver = "ozone"\n' >> "$SAFE_CONFIG"
+exec "$BINARY" --config "$SAFE_CONFIG" --menu
