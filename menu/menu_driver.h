@@ -1025,6 +1025,10 @@ void menu_dialog_confirm(struct menu_state *menu_st);
 
 extern const menu_ctx_driver_t *menu_ctx_drivers[];
 
+#ifdef HAVE_DECK_UI
+extern menu_ctx_driver_t menu_ctx_deck;
+void deck_menu_driver_bootstrap(void);
+#endif
 extern menu_ctx_driver_t menu_ctx_ozone;
 extern menu_ctx_driver_t menu_ctx_rgui;
 extern menu_ctx_driver_t menu_ctx_mui;
