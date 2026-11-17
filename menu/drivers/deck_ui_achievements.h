@@ -135,6 +135,51 @@ static inline void deck_ui_achievements_move(
    view->tab_selected[view->filter] = view->selected;
 }
 
+/* Summary counts for the tab headers and progress display. */
+static inline size_t deck_ui_achievements_unlocked_count(
+      const deck_ui_achievements_t *view)
+{
+   size_t i, count = 0;
+   if (!view)
+      return 0;
+   for (i = 0; i < view->count; ++i)
+      if (view->items[i].unlocked)
+         ++count;
+   return count;
+}
+
+static inline size_t deck_ui_achievements_tab_count(
+      const deck_ui_achievements_t *view,
+      deck_ui_achievement_filter_t tab)
+{
+   size_t unlocked;
+   if (!view)
+      return 0;
+   unlocked = deck_ui_achievements_unlocked_count(view);
+   if (tab == DECK_UI_ACHIEVEMENT_ALL)
+      return view->count;
+   if (tab == DECK_UI_ACHIEVEMENT_UNLOCKED)
+      return unlocked;
+   if (tab == DECK_UI_ACHIEVEMENT_LOCKED)
+      return view->count - unlocked;
+   return 0;
+}
+
+/* Scroll the selected row into a fixed-height viewport. */
+static inline size_t deck_ui_achievements_scroll_offset(
+      const deck_ui_achievements_t *view, size_t rows_per_page)
+{
+   size_t count;
+   if (!view || !rows_per_page)
+      return 0;
+   count = deck_ui_achievements_visible_count(view);
+   if (count <= rows_per_page || view->selected < rows_per_page)
+      return 0;
+   if (view->selected >= count)
+      return count - rows_per_page;
+   return view->selected - rows_per_page + 1;
+}
+
 /* L/R shoulder navigation wraps through All, Unlocked, Locked tabs. */
 static inline void deck_ui_achievements_switch_tab(
       deck_ui_achievements_t *view, int direction)
