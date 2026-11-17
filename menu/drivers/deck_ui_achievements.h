@@ -31,6 +31,7 @@ typedef struct deck_ui_achievements
    size_t count;
    size_t selected;
    deck_ui_achievement_filter_t filter;
+   size_t tab_selected[3];
 } deck_ui_achievements_t;
 
 static inline void deck_ui_achievements_init(deck_ui_achievements_t *view)
@@ -108,8 +109,11 @@ static inline void deck_ui_achievements_set_filter(
    if (!view || filter < DECK_UI_ACHIEVEMENT_ALL ||
        filter > DECK_UI_ACHIEVEMENT_UNLOCKED)
       return;
+   view->tab_selected[view->filter] = view->selected;
    view->filter = filter;
-   view->selected = 0;
+   view->selected = view->tab_selected[filter];
+   if (view->selected >= deck_ui_achievements_visible_count(view))
+      view->selected = 0;
 }
 
 static inline void deck_ui_achievements_move(
@@ -128,5 +132,28 @@ static inline void deck_ui_achievements_move(
       view->selected++;
    else if (direction < 0 && view->selected > 0)
       view->selected--;
+   view->tab_selected[view->filter] = view->selected;
 }
+
+/* L/R shoulder navigation wraps through All, Unlocked, Locked tabs. */
+static inline void deck_ui_achievements_switch_tab(
+      deck_ui_achievements_t *view, int direction)
+{
+   static const deck_ui_achievement_filter_t order[] = {
+      DECK_UI_ACHIEVEMENT_ALL,
+      DECK_UI_ACHIEVEMENT_UNLOCKED,
+      DECK_UI_ACHIEVEMENT_LOCKED
+   };
+   size_t i;
+   if (!view || !direction)
+      return;
+   for (i = 0; i < 3; i++)
+      if (view->filter == order[i])
+      {
+         size_t next = direction > 0 ? (i + 1) % 3 : (i + 2) % 3;
+         deck_ui_achievements_set_filter(view, order[next]);
+         return;
+      }
+}
+
 #endif
